@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rest_api/todo.dart';
 import 'api_service.dart';
 
 Future<void> main() async {
@@ -8,6 +9,11 @@ Future<void> main() async {
   print(todo.title);
   print(todo.completed);
 
+  final todos = await apiService.fetchTodos();
+
+  print(todos.length);
+  print(todos[0].title);
+  
   runApp(
     const MyApp(),
   );

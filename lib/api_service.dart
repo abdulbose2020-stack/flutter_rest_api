@@ -12,7 +12,7 @@ class ApiService {
     );
   }
 
-  Future<Map<String, dynamic>> _getRequest(Uri url) async {
+  Future<dynamic> _getRequest(Uri url) async {
     final response = await http.get(url);
 
     if (response.statusCode >= 200 &&
@@ -36,5 +36,20 @@ class ApiService {
         await _getRequest(url);
 
     return Todo.fromJson(data);
+  }
+
+  Future<List<Todo>> fetchTodos() async {
+    final url = Uri.parse(
+      '$baseUrl/todos',
+    );
+
+    final response = await _getRequest(url);
+
+    final List<Map<String, dynamic>> data =
+        response.cast<Map<String, dynamic>>();
+
+    return data
+        .map((json) => Todo.fromJson(json))
+        .toList();
   }
 }
