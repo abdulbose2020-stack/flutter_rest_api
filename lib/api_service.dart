@@ -52,4 +52,83 @@ class ApiService {
         .map((json) => Todo.fromJson(json))
         .toList();
   }
+
+  Future<Todo> createTodo({
+    required int userId,
+    required String title,
+    required bool completed,
+  }) async {
+    final url = Uri.parse('$baseUrl/todos');
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'userId': userId,
+        'title': title,
+        'completed': completed,
+      }),
+    );
+
+    if (response.statusCode >= 200 &&
+        response.statusCode < 300) {
+      final data = jsonDecode(response.body);
+
+      return Todo.fromJson(data);
+    }
+
+    throw Exception(
+      'POST request failed: ${response.statusCode}',
+    );
+  }
+
+  Future<Todo> updateTodo({
+    required int id,
+    required int userId,
+    required String title,
+    required bool completed,
+  }) async {
+    final url = Uri.parse('$baseUrl/todos/$id');
+
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'userId': userId,
+        'title': title,
+        'completed': completed,
+      }),
+    );
+
+    if (response.statusCode >= 200 &&
+        response.statusCode < 300) {
+      final data = jsonDecode(response.body);
+
+      return Todo.fromJson(data);
+    }
+
+    throw Exception(
+      'PUT request failed: ${response.statusCode}',
+    );
+  }
+
+  Future<void> deleteTodo (int id) async {
+    final url = Uri.parse('$baseUrl/todos/$id');
+    final response = await http.delete(
+      url,
+    );
+
+    if(response.statusCode >= 200 &&
+    response.statusCode < 300) {
+      return;
+    }
+
+    throw Exception(
+      'Delete request failed: ${response.statusCode}',
+    );
+  }
 }
